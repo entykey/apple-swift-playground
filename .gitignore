@@ -1,0 +1,6 @@
+# Compiled executables
+*.app
+*.ipa
+*.dSYM/
+*.xcarchive/
+*.framework/
