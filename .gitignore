@@ -4,3 +4,9 @@
 *.dSYM/
 *.xcarchive/
 *.framework/
+
+*
+!*.c
+!Makefile
+
+.DS_Store

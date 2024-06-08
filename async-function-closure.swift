@@ -34,6 +34,7 @@ fetchData { result in
 }
 */
 
+/*
 // FIX: The above code terminated without any result because the main thread is likely completing execution before the asynchronous operation inside fetchData(completion:) completes. This happens because the main thread doesn't wait for the asynchronous operation to finish before continuing with the rest of the code.
 // To see the result of the asynchronous operation, you need to make sure that your program continues to run until the asynchronous operation is completed. One way to achieve this is by using a semaphore to wait for the asynchronous operation to finish. However, using a semaphore for this purpose can lead to deadlocks if not used carefully.
 // Alternatively, you can use a DispatchGroup to handle this scenario. Here's how you can modify the code to use a DispatchGroup:
@@ -77,6 +78,65 @@ fetchData { result in
 group.wait()
 
 print("Async operation completed")
+*/
+
+
+/*
+// again, this code does not wait for completion
+import Foundation
+
+func fetchData() async throws -> String {
+    print("fetching data...")
+    
+    // Simulating a network request that takes time
+    await Task.sleep(1 * 1_000_000_000) // 1 second
+    
+    // Assuming the data is fetched successfully
+    return "This is the fetched data"
+}
+
+// Calling the async function
+Task {
+    do {
+        let data = try await fetchData()
+        print("Data fetched successfully: \(data)")
+    } catch {
+        print("Error fetching data: \(error)")
+    }
+}
+*/
+
+
+
+import Foundation
+
+func fetchData() async throws -> String {
+    print("fetching data...")
+    
+    // Simulating a network request that takes time
+    await Task.sleep(1 * 1_000_000_000) // 1 second
+    
+    // Assuming the data is fetched successfully
+    return "This is the fetched data"
+}
+
+// Create a detached task
+Task.detached {
+    do {
+        let data = try await fetchData()
+        print("Data fetched successfully: \(data)")
+
+        exit(0) // Exit the program after there's no more works to do
+    } catch {
+        print("Error fetching data: \(error)")
+    }
+}
+
+// Ensure the program doesn't terminate immediately
+RunLoop.main.run()
+
+
+
 
 
 // $ swiftc async-function-closure.swift
